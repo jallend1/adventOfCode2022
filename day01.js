@@ -26,8 +26,26 @@ function calculateLargestSumInArray(arr) {
       largestSum = sum;
     }
   });
-  return largestSum;
+  console.log(largestSum);
+}
+
+function sortArraysBySum(arr) {
+  arr.sort((a, b) => {
+    const sumA = a.reduce((acc, curr) => acc + parseInt(curr), 0);
+    const sumB = b.reduce((acc, curr) => acc + parseInt(curr), 0);
+    return sumB - sumA;
+  });
+}
+
+function findSumOfTopThree(arr) {
+  const richestElves = arr.slice(0, 3);
+  const sum = richestElves.reduce((acc, curr) => {
+    return acc + curr.reduce((acc, curr) => acc + parseInt(curr), 0);
+  }, 0);
+  console.log(sum);
 }
 
 separateElves(rawElfData);
-console.log(calculateLargestSumInArray(sortedElves));
+calculateLargestSumInArray(sortedElves);
+sortArraysBySum(sortedElves);
+findSumOfTopThree(sortedElves);
