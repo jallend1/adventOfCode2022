@@ -3,11 +3,17 @@ const fs = require('fs');
 const rawRucksackData = fs.readFileSync('day03-input.txt', 'utf8').split('\n');
 
 let totalPriority = 0;
+let badgePriority = 0;
 
-const findCommonCharacter = (strOne, strTwo) => {
+const findCommonCharacter = (strOne, strTwo, strThree = null) => {
   const arrOne = strOne.split('');
   const arrTwo = strTwo.split('');
-  return arrOne.filter((element) => arrTwo.includes(element)).join('');
+  return !strThree
+    ? arrOne.filter((element) => arrTwo.includes(element)).join('')
+    : arrOne
+        .filter((element) => arrTwo.includes(element))
+        .filter((element) => strThree.includes(element))
+        .join('');
 };
 
 const calculatePriority = (commonLetter) => {
@@ -18,8 +24,9 @@ const calculatePriority = (commonLetter) => {
   }
 };
 
-const sortRucksacks = (rawRucksackData) => {
+const problemOne = (rawRucksackData) => {
   rawRucksackData.forEach((rucksackData) => {
+    // Divides the rucksack into its two components
     const compartmentOne = rucksackData.slice(
       0,
       Math.floor(rucksackData.length / 2)
@@ -30,8 +37,26 @@ const sortRucksacks = (rawRucksackData) => {
     const commonLetter = findCommonCharacter(compartmentOne, compartmentTwo);
     totalPriority += calculatePriority(commonLetter);
   });
+  console.log(totalPriority);
 };
 
-sortRucksacks(rawRucksackData);
+const problemTwo = (rawRucksackData) => {
+  const elfGroupSize = 3;
+  const elvesGrouped = rawRucksackData.reduce((elfGroup, elf, index) => {
+    const groupIndex = Math.floor(index / elfGroupSize);
+    if (!elfGroup[groupIndex]) {
+      elfGroup[groupIndex] = [];
+    }
+    elfGroup[groupIndex].push(elf);
+    return elfGroup;
+  }, []);
+  elvesGrouped.forEach((elfGroup) => {
+    const [elfOne, elfTwo, elfThree] = elfGroup;
+    const commonLetter = findCommonCharacter(elfOne, elfTwo, elfThree);
+    badgePriority += calculatePriority(commonLetter);
+  });
+  console.log(badgePriority);
+};
 
-console.log(totalPriority);
+problemOne(rawRucksackData);
+problemTwo(rawRucksackData);
