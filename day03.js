@@ -3,7 +3,6 @@ const fs = require('fs');
 const rawRucksackData = fs.readFileSync('day03-input.txt', 'utf8').split('\n');
 
 rawRucksackData.forEach((rucksackData) => {
-  //   const rucksack = rucksackData.split('');
   const compartmentOne = rucksackData.slice(
     0,
     Math.floor(rucksackData.length / 2)
