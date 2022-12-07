@@ -2,9 +2,6 @@
 
 const fs = require('fs');
 const inputFile = fs.readFileSync('day05-input.txt', 'utf8').split('\n');
-const rawStackData = inputFile.slice(0, 8);
-
-const stackData = [...Array(9)].map(() => []);
 
 // The crate layout to help me visualize:
 // '    [H]         [D]     [P]        ',
@@ -25,13 +22,31 @@ const extractCrates = (line) => {
   return crates;
 };
 
+const extractMovementData = (rawData) => {
+  const movementData = [];
+  rawData.forEach((line) => {
+    const destinationStack = line[line.length - 1];
+    const sourceStack = line[line.length - 6];
+    const numberToMove = line.length === 18 ? line[5] : line[5] + line[6];
+    movementData.push([numberToMove, sourceStack, destinationStack]);
+  });
+  return movementData;
+};
+
+const rawMovementData = inputFile.slice(10);
+const movementData = extractMovementData(rawMovementData);
+
+const rawStackData = inputFile.slice(0, 8);
+const stackData = [...Array(9)].map(() => []);
+
 rawStackData.forEach((line) => {
   const crateContents = extractCrates(line);
   crateContents.map((crate, index) => {
+    // If blank space, we got no crates on that stack
     if (crate !== ' ') {
       stackData[index].push(crate);
     }
   });
 });
 
-console.log(stackData);
+console.log(movementData);
