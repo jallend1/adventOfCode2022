@@ -25,10 +25,12 @@ const extractCrates = (line) => {
 const extractMovementData = (rawData) => {
   const movementData = [];
   rawData.forEach((line) => {
-    const destinationStack = line[line.length - 1];
-    const sourceStack = line[line.length - 6];
-    const numberToMove = line.length === 18 ? line[5] : line[5] + line[6];
-    movementData.push([numberToMove, sourceStack, destinationStack]);
+    const destinationStack = parseInt(line[line.length - 1]);
+    const sourceStack = parseInt(line[line.length - 6]);
+    const numberToMove = parseInt(
+      line.length === 18 ? line[5] : line[5] + line[6]
+    );
+    movementData.push({ numberToMove, sourceStack, destinationStack });
   });
   return movementData;
 };
@@ -49,4 +51,34 @@ rawStackData.forEach((line) => {
   });
 });
 
-console.log(movementData);
+const processMoveOrder = (numOfCrates, sourceStack, destinationStack) => {
+  // Takes the top crate (First in the array) and moves it to the destination stack
+  // Repeats the process for the number of crates specified
+  for (let i = 0; i < numOfCrates; i++) {
+    const movedCrate = stackData[sourceStack].shift();
+    stackData[destinationStack].unshift(movedCrate);
+  }
+};
+
+const moveCrates = (movementData) => {
+  movementData.forEach((moveOrder) => {
+    const {
+      numberToMove: crates,
+      sourceStack: source,
+      destinationStack: destination
+    } = moveOrder;
+    processMoveOrder(crates, source - 1, destination - 1);
+  });
+};
+
+const findTopCrates = (stackData) => {
+  // Retrieves the name of the top crate on each stack
+  const topCrates = [];
+  stackData.forEach((stack) => {
+    topCrates.push(stack[0]);
+  });
+  return topCrates;
+};
+
+moveCrates(movementData);
+console.log(findTopCrates(stackData));
