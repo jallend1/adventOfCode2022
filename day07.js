@@ -5,11 +5,25 @@ const commandLines = fs.readFileSync('day07-input.txt', 'utf8').split('\n');
 
 console.log(commandLines);
 
-let directories = [];
-let totalSize = 0;
+let currentPath = [];
+let totals = [];
 
-const handleCommands = (command) => {};
-const handleFiles = (command) => {};
+const handleCommands = (command) => {
+  console.log(command);
+  if (command[1] === 'cd') {
+    if (command[2] === '..') {
+      currentPath.pop();
+    } else {
+      currentPath.push(command[2]);
+    }
+  }
+};
+
+const handleFiles = (command) => {
+  const fileSize = parseInt(command[0]);
+  //   console.log(currentPath);
+  console.log(currentPath.length);
+};
 
 commandLines.forEach((commandLine) => {
   const command = commandLine.split(' ');
