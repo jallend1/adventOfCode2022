@@ -9,12 +9,25 @@ let currentPath = [];
 let totals = [];
 
 const handleCommands = (command) => {
-  console.log(command);
   if (command[1] === 'cd') {
     if (command[2] === '..') {
       currentPath.pop();
     } else {
-      currentPath.push(command[2]);
+      const index = totals.findIndex(
+        (dir) => dir.id === JSON.stringify(currentPath + command[2])
+      );
+      if (index === -1) {
+        totals.push({
+          name: command[2],
+          size: 0,
+          id: JSON.stringify(currentPath + command[2])
+        });
+      }
+      currentPath.push({
+        name: command[2],
+        size: 0,
+        id: JSON.stringify(currentPath + command[2])
+      });
     }
   }
 };
@@ -22,7 +35,16 @@ const handleCommands = (command) => {
 const handleFiles = (command) => {
   const fileSize = parseInt(command[0]);
   //   console.log(currentPath);
-  console.log(currentPath.length);
+  const index = totals.findIndex(
+    (total) => total.id === JSON.stringify(currentPath + command[2])
+  );
+  console.log(index);
+  if (index !== -1) totals[index].size += fileSize;
+  console.log(totals);
+  // console.log(command);
+  // console.log(currentPath.length);
+  // console.log(fileSize);
+  // console.log(currentPath);
 };
 
 commandLines.forEach((commandLine) => {
@@ -30,3 +52,5 @@ commandLines.forEach((commandLine) => {
   if (command[0] === '$') handleCommands(command);
   else if (command[0] !== 'dir') handleFiles(command);
 });
+
+console.log(totals);
